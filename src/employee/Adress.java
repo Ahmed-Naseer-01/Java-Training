@@ -9,13 +9,10 @@ public class Adress {
      return permanentAddress;
  }
  public String getTemporaryAddress(){ return temporaryAddress; }
-
-
-    public void setPermanentAddress(String permanentAddress) {
+ public void setPermanentAddress(String permanentAddress) {
         this.permanentAddress = permanentAddress;
     }
-
-    public void setTemporaryAddress(String temporaryAddress) {
+ public void setTemporaryAddress(String temporaryAddress) {
         this.temporaryAddress = temporaryAddress;
     }
 }
