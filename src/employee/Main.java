@@ -72,8 +72,7 @@ public class Main {
                 System.out.println("Please enter correct Contact Number format");
             }
         }
-        // load country codes
-//        PhoneNumberValidator.loadCountryCodes();
+
 
         }
     }
