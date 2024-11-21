@@ -7,28 +7,23 @@ public class Employee {
         private String contactNumber;
         private int salary;
         private String mail;
-        Adress adress;
+        Adress adress = new Adress();
 
-    public void setMail(String mail) {
+        public void setMail(String mail) {
         this.mail = mail;
     }
-
-    public String getMail() {
+        public String getMail() {
         return mail;
     }
-
-    public void setName(String name) {
+        public void setName(String name) {
             this.name = name;
         }
-
         public void setSalary(int salary) {
             this.salary = salary;
         }
-
         public void setDepartment(String department) {
             this.department = department;
         }
-
         public void setContactNumber(String contactNumber) {
             System.out.println(contactNumber);
             this.contactNumber = contactNumber;
@@ -37,26 +32,22 @@ public class Employee {
         public String getContactNumber() {
             return this.contactNumber;
         }
-
         public String getName() {
             return name;
         }
-
         public String getDepartment() {
             return department;
         }
-
         public long getSalary() {
             return salary;
         }
+        public String getTemporaryAddress(){ return this.adress.getTemporaryAddress();}
+        public String getPermanentAddress(){return this.adress.getPermanentAddress();}
         public void setPermanentAddress(String address)
         {
             adress.setPermanentAddress(address);
         }
-        public void setTemporaryAddress(String address)
-    {
-        adress.setTemporaryAddress(address);
-    }
+        public void setTemporaryAddress(String address) { adress.setTemporaryAddress(address); }
 
 }
 
