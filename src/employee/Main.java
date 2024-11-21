@@ -11,27 +11,27 @@ public class Main {
         Employee emp1 = new Employee();
         PhoneNumberValidator.loadCountryCodes();
         Scanner sc = new Scanner(System.in);
-//        System.out.println("Enter your name : ");
-//        String name = sc.nextLine();
-//        if (name != null) emp1.setName(name);
-//        while (true) {
-//            System.out.println("Enter your Salary : ");
-//
-//            String sal = sc.nextLine();
-//            try {
-//
-//                int salary = Integer.parseInt(sal);
-//                if (salary > 0) {
-//                    emp1.setSalary(salary);
-//                    break;
-//                } else System.out.println("Invalid  Salary format");
-//            } catch (NumberFormatException e) {
-//                System.out.println("Please enter correct salary format( Integer) ");
-//
-//            }
-//
-//        }
-//
+        System.out.println("Enter your name : ");
+        String name = sc.nextLine();
+        if (name != null) emp1.setName(name);
+        while (true) {
+            System.out.println("Enter your Salary : ");
+
+            String sal = sc.nextLine();
+            try {
+
+                int salary = Integer.parseInt(sal);
+                if (salary > 0) {
+                    emp1.setSalary(salary);
+                    break;
+                } else System.out.println("Invalid  Salary format");
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter correct salary format( Integer) ");
+
+            }
+
+        }
+
         while (true) {
             System.out.println("Enter your country code ");
             String countryCode = sc.nextLine();
@@ -57,21 +57,21 @@ public class Main {
 //
 //        // mail
 //
-//        while (true) {
-//            Pattern mailPattern = Pattern.compile("[a-z 0-9]+@[a-z]+.com");
-//            String mail = sc.nextLine();
-//            Matcher matcher = mailPattern.matcher(mail);
-//            boolean matches = matcher.matches();
-//            try {
-////                int contactNumber = Integer.parseInt(cNum);
-//                if (matches) {
-//                    emp1.setContactNumber(mail);
-//                    break;
-//                } else System.out.println("Invalid  Contact Number format");
-//            } catch (NumberFormatException e) {
-//                System.out.println("Please enter correct Contact Number format");
-//            }
-//        }
+        while (true) {
+            Pattern mailPattern = Pattern.compile("[a-z 0-9]+@[a-z]+.com");
+            String mail = sc.nextLine();
+            Matcher matcher = mailPattern.matcher(mail);
+            boolean matches = matcher.matches();
+            try {
+//                int contactNumber = Integer.parseInt(cNum);
+                if (matches) {
+                    emp1.setContactNumber(mail);
+                    break;
+                } else System.out.println("Invalid  Contact Number format");
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter correct Contact Number format");
+            }
+        }
         // load country codes
 //        PhoneNumberValidator.loadCountryCodes();
 
