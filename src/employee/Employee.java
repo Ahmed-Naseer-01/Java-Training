@@ -2,13 +2,22 @@ package employee;
 
 public class Employee {
 
+        private int id;
         private String name;
         private String department;
         private String contactNumber;
         private int salary;
+        private String dateOfBirth;
         private String mail;
         Adress adress = new Adress();
 
+
+        public void setId(int id) {
+        this.id = id;
+    }
+        public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
         public void setMail(String mail) {
         this.mail = mail;
     }
@@ -29,6 +38,12 @@ public class Employee {
             this.contactNumber = contactNumber;
         }
 
+    public int getId() {
+        return id;
+    }
+        public String getDateOfBirth() {
+        return dateOfBirth;
+    }
         public String getContactNumber() {
             return this.contactNumber;
         }
@@ -38,7 +53,7 @@ public class Employee {
         public String getDepartment() {
             return department;
         }
-        public long getSalary() {
+        public int getSalary() {
             return salary;
         }
         public String getTemporaryAddress(){ return this.adress.getTemporaryAddress();}
