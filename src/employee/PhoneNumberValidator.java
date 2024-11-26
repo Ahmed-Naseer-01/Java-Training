@@ -7,9 +7,9 @@ public class PhoneNumberValidator {
 
     private static Properties countryCodes = new Properties();
     public static void loadCountryCodes() {
-        try (FileReader fis = new FileReader("src/employee/country_codes.properties")) {
+        try (FileReader fis = new FileReader("src/employee/regex.properties")) {
             countryCodes.load(fis);
-            System.out.println("codes loaded successfully");
+//            System.out.println("codes loaded successfully");
         } catch (IOException e) {
             System.out.println("Error loading country codes: " + e.getMessage());
         }
