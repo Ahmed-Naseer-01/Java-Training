@@ -1,18 +1,24 @@
 package employee;
 
 public class Adress {
- String permanentAddress;
+    private int id;
+    String permanentAddress;
  String temporaryAddress;
 
- public String getPermanentAddress()
- {
+public int getId() {
+        return id;
+    }
+public void setId(int id) {
+        this.id = id;
+    }
+public String getPermanentAddress(){
      return permanentAddress;
  }
- public String getTemporaryAddress(){ return temporaryAddress; }
- public void setPermanentAddress(String permanentAddress) {
+public String getTemporaryAddress(){ return temporaryAddress; }
+public void setPermanentAddress(String permanentAddress) {
         this.permanentAddress = permanentAddress;
     }
- public void setTemporaryAddress(String temporaryAddress) {
+public void setTemporaryAddress(String temporaryAddress) {
         this.temporaryAddress = temporaryAddress;
     }
 }
