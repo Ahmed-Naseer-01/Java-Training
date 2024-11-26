@@ -29,5 +29,5 @@ bin/
 .DS_Store
 
 # useless file
-.idea
+.idea/*
 prac_day_01.iml
