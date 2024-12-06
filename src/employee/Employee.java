@@ -1,16 +1,29 @@
 package employee;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Employee {
 
         private int id;
         private String name;
-        private String department;
         private String contactNumber;
         private int salary;
         private String dateOfBirth;
         private String mail;
-        Adress adress = new Adress();
-        String Bari;
+        private List<Address> addresses;
+        private List<Contact> contacts;
+        private List<Department> departments;
+
+        public void setDepartments(List<Department> departments) {
+        this.departments = departments;
+    }
+        public void setContacts(List<Contact> contacts) {
+            this.contacts = contacts;
+        }
+        public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+
+    }
         public void setId(int id) {
         this.id = id;
     }
@@ -29,15 +42,21 @@ public class Employee {
         public void setSalary(int salary) {
             this.salary = salary;
         }
-        public void setDepartment(String department) {
-            this.department = department;
-        }
         public void setContactNumber(String contactNumber) {
             System.out.println(contactNumber);
             this.contactNumber = contactNumber;
         }
 
-    public int getId() {
+        public List<Department> getDepartments() {
+        return departments;
+    }
+        public List<Contact> getContacts() {
+        return contacts;
+    }
+        public List<Address> getAddresses() {
+        return addresses;
+    }
+        public int getId() {
         return id;
     }
         public String getDateOfBirth() {
@@ -49,19 +68,10 @@ public class Employee {
         public String getName() {
             return name;
         }
-        public String getDepartment() {
-            return department;
-        }
         public int getSalary() {
             return salary;
         }
-        public String getTemporaryAddress(){ return this.adress.getTemporaryAddress();}
-        public String getPermanentAddress(){return this.adress.getPermanentAddress();}
-        public void setPermanentAddress(String address)
-        {
-            adress.setPermanentAddress(address);
-        }
-        public void setTemporaryAddress(String address) { adress.setTemporaryAddress(address); }
+
 
 }
 
