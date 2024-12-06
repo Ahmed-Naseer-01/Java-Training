@@ -10,8 +10,7 @@ public class Employee {
         private String dateOfBirth;
         private String mail;
         Adress adress = new Adress();
-
-
+        String Bari;
         public void setId(int id) {
         this.id = id;
     }
