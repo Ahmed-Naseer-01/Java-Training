@@ -2,12 +2,18 @@ package employee;
 
 public class Address {
     private int id;
-
     private String street;
     private String streetAddress;
     private String city;
     private String state;
     private String zipCode;
+    private Constant.AddressType addressType;  // Store the address type
+
+
+
+    public void setAddressType(Constant.AddressType addressType) {
+        this.addressType = addressType;
+    }
 
     public void setStreetAddress(String streetAddress) {
         this.streetAddress = streetAddress;
@@ -31,6 +37,10 @@ public class Address {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public Constant.AddressType getAddressType() {
+        return addressType;
     }
 
     public String getStreetAddress() {
