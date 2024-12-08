@@ -6,10 +6,8 @@ public class Employee {
 
         private int id;
         private String name;
-        private String contactNumber;
         private int salary;
         private String dateOfBirth;
-        private String mail;
         private List<Address> addresses;
         private List<Contact> contacts;
         private List<Department> departments;
@@ -30,21 +28,11 @@ public class Employee {
         public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
-        public void setMail(String mail) {
-        this.mail = mail;
-    }
-        public String getMail() {
-        return mail;
-    }
         public void setName(String name) {
             this.name = name;
         }
         public void setSalary(int salary) {
             this.salary = salary;
-        }
-        public void setContactNumber(String contactNumber) {
-            System.out.println(contactNumber);
-            this.contactNumber = contactNumber;
         }
 
         public List<Department> getDepartments() {
@@ -62,9 +50,6 @@ public class Employee {
         public String getDateOfBirth() {
         return dateOfBirth;
     }
-        public String getContactNumber() {
-            return this.contactNumber;
-        }
         public String getName() {
             return name;
         }
