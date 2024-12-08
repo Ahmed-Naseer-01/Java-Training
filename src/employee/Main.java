@@ -1,5 +1,8 @@
 package employee;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
@@ -8,20 +11,88 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Main {
-
+    private static final Logger logger = LogManager.getLogger(Main.class);
     public static void intionalizeEmployee(Employee emp, Scanner sc) {
         emp.setName(validateName(sc));
-        emp.setDepartment(validateDepartment(sc));
-        emp.setContactNumber(validatePhone(sc));
+        emp.setDepartments(validateDepartment(sc));
+        emp.setContacts(validateContacts(sc));
         emp.setSalary(validateSalary(sc));
-        emp.setMail(validateMail(sc));
-        emp.setPermanentAddress(validateAddress(sc, Constant.PERMADDRESS));
-        emp.setTemporaryAddress(validateAddress(sc, Constant.TEMPADDRESS));
+        emp.setAddresses(validateAddress(sc));
         emp.setDateOfBirth(validateDateOfBirth(sc));
-        System.out.println(emp.getDateOfBirth());
         EmployeeDAO.saveEmployee(emp);
     }
 
+    public static List<Contact> validateContacts(Scanner sc) {
+        List<Contact> contacts = new ArrayList<>();
+        boolean addmoreContact = true;
+        while (addmoreContact) {
+            Contact newContact = new Contact();
+            newContact.setPhoneNumber(validatePhone(sc));
+            newContact.setEmail(validateMail(sc));
+            contacts.add(newContact);
+            System.out.println("Do you want to enter More contact (yes/no) : ");
+            String choice = sc.nextLine().trim().toLowerCase();
+            addmoreContact = choice.equals("yes");
+        }
+        return contacts;
+    }
+    public static List<Address> validateAddress(Scanner sc) {
+        List<Address> addresses = new ArrayList<>();
+        boolean addMoreAddress = true;
+        boolean permanentAddressAdded = false;
+
+        while (addMoreAddress) {
+            Address newAddress = new Address();
+
+            System.out.println("Select Address Type:");
+            System.out.println("1. Temporary");
+            System.out.println("2. Permanent");
+            int addressTypeChoice = -1;
+
+            while (addressTypeChoice < 1 || addressTypeChoice > 2) {
+                System.out.print("Enter 1 or 2 to select address type: ");
+                addressTypeChoice = sc.nextInt();
+                sc.nextLine();  // Clear the newline character after nextInt()
+            }
+
+            // Check if it's a permanent address and enforce the rule
+            if (addressTypeChoice == 1) {
+                newAddress.setAddressType(Constant.AddressType.TEMPORARY);
+            } else if (addressTypeChoice == 2) {
+                // If a permanent address is already added, show error and skip adding a new one
+                if (permanentAddressAdded) {
+                    System.out.println("You can only have one permanent address. Skipping this address.");
+                    continue;  // Skip adding this address and ask the user to add another one
+                }
+                newAddress.setAddressType(Constant.AddressType.PERMANENT);
+                permanentAddressAdded = true;  // Mark that a permanent address has been added
+            }
+            // Collect address details from the user
+            System.out.print("Enter Street: ");
+            newAddress.setStreet(sc.nextLine());
+
+            System.out.print("Enter Street Address: ");
+            newAddress.setStreetAddress(sc.nextLine());
+
+            System.out.print("Enter City: ");
+            newAddress.setCity(sc.nextLine());
+
+            System.out.print("Enter State: ");
+            newAddress.setState(sc.nextLine());
+
+            System.out.print("Enter Zip Code: ");
+            newAddress.setZipCode(sc.nextLine());
+
+            // Add the address to the list
+            addresses.add(newAddress);
+
+            // Ask if the user wants to add another address
+            System.out.print("Do you want to add another address? (yes/no): ");
+            String response = sc.nextLine().trim().toLowerCase();
+            addMoreAddress = response.equals("yes");
+        }
+        return addresses;
+    }
     public static String validateDateOfBirth(Scanner sc) {
         System.out.println("Enter Date of Birth (dd-MM-yyyy): ");
         String dateOfBirth = sc.nextLine();
@@ -62,8 +133,6 @@ public class Main {
             return validateDateOfBirth(sc);
         }
     }
-
-
     public static String validateName(Scanner sc) {
         System.out.println("Enter your name: ");
         String name = sc.nextLine().trim();
@@ -73,17 +142,60 @@ public class Main {
         }
         return name;
     }
+    public static List<Department> validateDepartment(Scanner sc) {
+        List<Department> departments = new ArrayList<>();
+        boolean addMoreDepartment = true;
 
-    public static String validateDepartment(Scanner sc) {
-        System.out.println("Enter your Department: ");
-        String department = sc.nextLine().trim();
-        if (!Utils.validRegex("[A-Z a-z]+\\s?[A-Z a-z]*\\s?[A-Z a-z]*?", department)) {
-            System.out.println("Incorrect Format.");
-            return validateDepartment(sc);
+        while (addMoreDepartment) {
+            Department newDepartment = new Department();
+
+            // Validate Department Name
+            while (true) {
+                System.out.println("Enter Department Name: ");
+                String department = sc.nextLine().trim();
+                if (!Utils.validRegex("^[A-Za-z ]+$", department)) {
+                    System.out.println("Incorrect format. Department name should only contain letters and spaces.");
+                } else if (departments.stream().anyMatch(dep -> dep.getName().equalsIgnoreCase(department))) {
+                    System.out.println("This department already exists. Please enter a different name.");
+                } else {
+                    newDepartment.setName(department);
+                    break; // Valid input; exit loop
+                }
+            }
+
+            // Validate Department Description
+            while (true) {
+                System.out.println("Enter Department Description: ");
+                String departmentDescription = sc.nextLine().trim();
+                if (departmentDescription.isEmpty()) {
+                    System.out.println("Description cannot be empty. Please enter a valid description.");
+                } else {
+                    newDepartment.setDescription(departmentDescription);
+                    break; // Valid input; exit loop
+                }
+            }
+
+            // Add Department to List
+            departments.add(newDepartment);
+
+            // Check if user wants to add another department
+            System.out.println("Do you want to add another department? (yes/no): ");
+            while (true) {
+                String response = sc.nextLine().trim().toLowerCase();
+                if (response.equals("yes")) {
+                    addMoreDepartment = true;
+                    break;
+                } else if (response.equals("no")) {
+                    addMoreDepartment = false;
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please type 'yes' or 'no': ");
+                }
+            }
         }
-        return department;
-    }
 
+        return departments;
+    }
     public static String validatePhone(Scanner sc) {
         System.out.println("Enter your country code (e.g., PK, US, etc.): ");
         String countryCode = sc.nextLine().trim();
@@ -108,7 +220,6 @@ public class Main {
             return validatePhone(sc);
         }
     }
-
     public static int validateSalary(Scanner sc) {
         System.out.println("Enter your Salary: ");
         String sal = sc.nextLine();
@@ -125,15 +236,13 @@ public class Main {
             return validateSalary(sc);
         }
     }
-
     public static String validateMail(Scanner sc) {
-        System.out.println("Enter mail: ");
+        System.out.println("Enter Mail: ");
         String mail = sc.nextLine().trim();
 
         Properties mailCode = new Properties();
         try (FileReader fis = new FileReader("src/employee/regex.properties")) {
             mailCode.load(fis);
-            System.out.println("Codes loaded successfully.");
         } catch (IOException e) {
             System.out.println("Error loading country codes: " + e.getMessage());
         }
@@ -144,24 +253,30 @@ public class Main {
         System.out.println("Invalid Mail format.");
         return validateMail(sc);
     }
-
-    public static String validateAddress(Scanner sc, String addressType) {
-        System.out.println("Enter your " + addressType + " Address: ");
-        String address = sc.nextLine();
-        if (address.isEmpty()) {
-            return validateAddress(sc, addressType);
-        }
-        return address;
-    }
-
     public static void displayDetails(Employee emp) {
         System.out.println("Name: " + emp.getName());
-        System.out.println("Mail: " + emp.getMail());
-        System.out.println("Phone Number: " + emp.getContactNumber());
-        System.out.println("Department: " + emp.getDepartment());
         System.out.println("Salary: " + emp.getSalary());
-        System.out.println("Permanent Address: " + emp.getPermanentAddress());
-        System.out.println("Temporary Address: " + emp.getTemporaryAddress());
+        System.out.println("Date of Birth: " + emp.getDateOfBirth().toString());
+        System.out.println("--------------------Contact--------------------");
+        for (Contact contact : emp.getContacts()) {
+            System.out.println("email: " + contact.getEmail());
+            System.out.println("Phone Number: " + contact.getPhoneNumber());
+            System.out.println("---------------------------------");
+        }
+        System.out.println("--------------------Address--------------------");
+        for (Address address : emp.getAddresses()) {
+            System.out.println("Address Type: " + address.getAddressType());
+            System.out.println("Street : " + address.getStreet());
+            System.out.println("City : " + address.getCity());
+            System.out.println("State : " + address.getState());
+            System.out.println("zipCode : " + address.getZipCode());
+            System.out.println("Street Address : " + address.getStreetAddress());
+        }
+        System.out.println("--------------------Department--------------------");
+        for (Department department : emp.getDepartments()) {
+            System.out.println("name: " + department.getName());
+            System.out.println("description: " + department.getDescription());
+        }
     }
 
     public static void main(String[] args) {
@@ -175,6 +290,7 @@ public class Main {
             System.out.println("3. Update Employee");
             System.out.println("4. Delete Employee");
             System.out.println("5. Exit");
+            logger.info("This is an info message.");
 
             int choice;
             try {
@@ -188,6 +304,7 @@ public class Main {
                 case 1 -> {
                     Employee newEmp = new Employee();
                     intionalizeEmployee(newEmp, scanner);
+//                    displayDetails(newEmp);
                 }
                 case 2 -> {
                     System.out.println("Enter Employee ID to view: ");
@@ -205,38 +322,33 @@ public class Main {
                     Employee empToUpdate = EmployeeDAO.getEmployeeById(updateId);
 
                     if (empToUpdate != null) {
-                        System.out.println("\n--- Which field(s) do you want to update? ---");
+                        System.out.println("\n--- Select the field(s) to update ---");
                         System.out.println("1. Name");
-                        System.out.println("2. Department");
-                        System.out.println("3. Contact Number");
-                        System.out.println("4. Salary");
-                        System.out.println("5. date of birth");
-                        System.out.println("6. Mail");
-                        System.out.println("7. Permanent Address");
-                        System.out.println("8. Temporary Address");
-//                        System.out.println("8. Update All Fields");
+                        System.out.println("2. Salary");
+                        System.out.println("3. Date of Birth");
+                        System.out.println("4. Contact Information");
+                        System.out.println("5. Address Information");
+                        System.out.println("6. Department Information");
+                        System.out.println("7. Update All");
 
-                        System.out.println("Enter your choice (e.g., 1 for Name, 2 for Department, etc.): ");
-                        int fieldChoice = Integer.parseInt(scanner.nextLine().trim());
+                        System.out.println("Enter your choice (comma-separated for multiple, e.g., 1,2,3): ");
+                        String[] options = scanner.nextLine().trim().split(",");
 
-                        switch (fieldChoice) {
-                            case 1 -> empToUpdate.setName(validateName(scanner));
-                            case 2 -> empToUpdate.setDepartment(validateDepartment(scanner));
-                            case 3 -> empToUpdate.setContactNumber(validatePhone(scanner));
-                            case 4 -> empToUpdate.setSalary(validateSalary(scanner));
-                            case 5 -> empToUpdate.setDateOfBirth(validateDateOfBirth(scanner));
-                            case 6 -> empToUpdate.setMail(validateMail(scanner));
-                            case 7 -> empToUpdate.setPermanentAddress(validateAddress(scanner, Constant.PERMADDRESS));
-                            case 8 -> empToUpdate.setTemporaryAddress(validateAddress(scanner, Constant.TEMPADDRESS));
-                            case 9 -> intionalizeEmployee(empToUpdate, scanner); // Reinitialize all fields
-                            default -> {
-                                System.out.println("Invalid choice. Please try again.");
-                                return;
+                        for (String option : options) {
+                            switch (Integer.parseInt(option.trim())) {
+                                case 1 -> empToUpdate.setName(validateName(scanner));
+                                case 2 -> empToUpdate.setSalary(validateSalary(scanner));
+                                case 3 -> empToUpdate.setDateOfBirth(validateDateOfBirth(scanner));
+                                case 4 -> empToUpdate.setContacts(validateContacts(scanner));
+                                case 5 -> empToUpdate.setAddresses(validateAddress(scanner));
+                                case 6 -> empToUpdate.setDepartments(validateDepartment(scanner));
+                                case 7 -> intionalizeEmployee(empToUpdate, scanner); // Update all fields
+                                default -> System.out.println("Invalid choice: " + choice);
                             }
                         }
 
-                        // Call DAO to update only the selected fields or all fields if case 8
-                        if (EmployeeDAO.updateEmployee(fieldChoice, updateId, empToUpdate)) {
+                        // Call DAO to update selected fields
+                        if (EmployeeDAO.updateEmployee(updateId, empToUpdate)) {
                             System.out.println("Employee updated successfully.");
                         } else {
                             System.out.println("Failed to update employee.");
