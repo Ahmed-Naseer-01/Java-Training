@@ -9,7 +9,14 @@ public class DatabaseConnection {
     private static final String USER = Constant.ROOT;
     private static final String PASSWORD = Constant.PASS;
 
+    private static Connection connection;
+
+    private DatabaseConnection() {}
+
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        if (connection == null || connection.isClosed() || !connection.isValid(2)) {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        }
+        return connection;
     }
 }
