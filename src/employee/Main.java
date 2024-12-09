@@ -12,7 +12,9 @@ import java.time.format.DateTimeParseException;
 
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
+
     public static void intionalizeEmployee(Employee emp, Scanner sc) {
+        logger.info("Employee instance intionalized");
         emp.setName(validateName(sc));
         emp.setDepartments(validateDepartment(sc));
         emp.setContacts(validateContacts(sc));
@@ -21,7 +23,6 @@ public class Main {
         emp.setDateOfBirth(validateDateOfBirth(sc));
         EmployeeDAO.saveEmployee(emp);
     }
-
     public static List<Contact> validateContacts(Scanner sc) {
         List<Contact> contacts = new ArrayList<>();
         boolean addmoreContact = true;
@@ -30,6 +31,7 @@ public class Main {
             newContact.setPhoneNumber(validatePhone(sc));
             newContact.setEmail(validateMail(sc));
             contacts.add(newContact);
+            logger.info("Contact added Successfully");
             System.out.println("Do you want to enter More contact (yes/no) : ");
             String choice = sc.nextLine().trim().toLowerCase();
             addmoreContact = choice.equals("yes");
@@ -61,7 +63,8 @@ public class Main {
             } else if (addressTypeChoice == 2) {
                 // If a permanent address is already added, show error and skip adding a new one
                 if (permanentAddressAdded) {
-                    System.out.println("You can only have one permanent address. Skipping this address.");
+                    logger.warn("You can only have one permanent address. Skipping this address.");
+//                    System.out.println("You can only have one permanent address. Skipping this address.");
                     continue;  // Skip adding this address and ask the user to add another one
                 }
                 newAddress.setAddressType(Constant.AddressType.PERMANENT);
@@ -189,7 +192,7 @@ public class Main {
                     addMoreDepartment = false;
                     break;
                 } else {
-                    System.out.println("Invalid input. Please type 'yes' or 'no': ");
+                    logger.warn("Invalid input. Please type 'yes' or 'no': ");
                 }
             }
         }
@@ -290,7 +293,6 @@ public class Main {
             System.out.println("3. Update Employee");
             System.out.println("4. Delete Employee");
             System.out.println("5. Exit");
-            logger.info("This is an info message.");
 
             int choice;
             try {
@@ -299,12 +301,10 @@ public class Main {
                 System.out.println("Invalid choice. Please enter a number between 1 and 5.");
                 continue;
             }
-
             switch (choice) {
                 case 1 -> {
                     Employee newEmp = new Employee();
                     intionalizeEmployee(newEmp, scanner);
-//                    displayDetails(newEmp);
                 }
                 case 2 -> {
                     System.out.println("Enter Employee ID to view: ");
@@ -330,6 +330,7 @@ public class Main {
                         System.out.println("5. Address Information");
                         System.out.println("6. Department Information");
                         System.out.println("7. Update All");
+
 
                         System.out.println("Enter your choice (comma-separated for multiple, e.g., 1,2,3): ");
                         String[] options = scanner.nextLine().trim().split(",");
@@ -357,7 +358,6 @@ public class Main {
                         System.out.println("Employee not found.");
                     }
                 }
-
                 case 4 -> {
                     System.out.println("Enter Employee ID to delete: ");
                     int deleteId = Integer.parseInt(scanner.nextLine().trim());
@@ -369,6 +369,7 @@ public class Main {
                 }
                 case 5 -> {
                     System.out.println("Exiting...");
+                    logger.info("Exiting the Employee Management System.");
                     scanner.close();
                     return;
                 }
