@@ -6,13 +6,8 @@ import java.util.List;
 
 
 public class EmployeeDAO {
+public static void saveEmployee(Employee emp) {
 
-
-    public static void saveEmployee(Employee emp) {
-//        PreparedStatement employeeStmt = null;
-//        PreparedStatement addressStmt = null;
-
-        // Use try-with-resources for auto-closing connection
         try (Connection connection = DatabaseConnection.getConnection()) {
 
             // Insert employee details
@@ -88,41 +83,14 @@ public class EmployeeDAO {
             e.printStackTrace();
         }
     }
-//
 public static Employee getEmployeeById(int id) {
     String sql = """
-        SELECT 
-            e.name,
-            e.salary,
-            e.dateOfBirth,
-            c.email,
-            c.phoneNumber,
-            a.id AS addressId,
-            a.street,
-            a.streetAddress,
-            a.city,
-            a.state,
-            a.zipCode,
-            a.addressType,
-            d.Name AS departmentName,
-            d.Description AS departmentDescription
-        FROM 
-            Employee e
-        LEFT JOIN 
-            Address a 
-            ON e.id = a.employee_id
-        LEFT JOIN 
-            Contact c 
-            ON e.id = c.employee_id
-        LEFT JOIN 
-            Employee_Department ed 
-            ON e.id = ed.employee_id
-        LEFT JOIN 
-            Department d 
-            ON ed.department_id = d.id
-        WHERE 
-            e.id = ?
-    """;
+ SELECT e.name, e.salary, e.dateOfBirth, c.email, c.phoneNumber, a.id AS addressId,\s
+        a.street, a.streetAddress, a.city, a.state, a.zipCode, a.addressType, d.Name AS departmentName,\s
+        d.Description AS departmentDescription FROM Employee e LEFT JOIN Address a ON e.id = a.employee_id\s
+            LEFT JOIN Contact c ON e.id = c.employee_id LEFT JOIN Employee_Department ed ON e.id = ed.employee_id\s
+            LEFT JOIN Department d ON ed.department_id = d.id WHERE e.id = ?
+           \s""";
 
     try (Connection connection = DatabaseConnection.getConnection();
          PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -195,8 +163,6 @@ public static Employee getEmployeeById(int id) {
     }
     return null;
 }
-
-//
 public static boolean updateEmployee(int employeeId, Employee emp) {
     List<String> updateQueries = new ArrayList<>();
     List<Object> params = new ArrayList<>();
@@ -218,20 +184,20 @@ public static boolean updateEmployee(int employeeId, Employee emp) {
     // Check if contacts exist and need to be updated
     if (emp.getContacts() != null && !emp.getContacts().isEmpty()) {
         for (Contact contact : emp.getContacts()) {
-            updateContact(employeeId, contact); // Assuming a helper function
+            updateContact(employeeId, contact);
         }
     }
 
     // Check if addresses exist and need to be updated
     if (emp.getAddresses() != null && !emp.getAddresses().isEmpty()) {
         for (Address address : emp.getAddresses()) {
-            updateAddress(employeeId, address); // Assuming a helper function
+            updateAddress(employeeId, address);
         }
     }
 
     // Check if departments need to be updated (using your previous method)
     if (emp.getDepartments() != null && !emp.getDepartments().isEmpty()) {
-        updateDepartments(employeeId, emp.getDepartments()); // Assuming this method exists
+        updateDepartments(employeeId, emp.getDepartments());
     }
 
     // Construct the main employee update query
@@ -271,10 +237,8 @@ public static boolean updateEmployee(int employeeId, Employee emp) {
 
     return true; // No updates to perform, so return true
 }
-
-
-    // Example Helper Function for Contacts
-    private static void updateContact(int employeeId, Contact contact) {
+// Helper Function for Contacts
+private static void updateContact(int employeeId, Contact contact) {
         String query = "UPDATE Contact SET phoneNumber = ?, email = ? WHERE employee_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -286,9 +250,8 @@ public static boolean updateEmployee(int employeeId, Employee emp) {
             System.err.println("Error updating contact: " + e.getMessage());
         }
     }
-
-    // Example Helper Function for Addresses
-    private static void updateAddress(int employeeId, Address address) {
+// Helper Function for Addresses
+private static void updateAddress(int employeeId, Address address) {
         String query = "UPDATE Address SET street = ?, city = ?, state = ?, zipCode = ?, addressType = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -303,7 +266,7 @@ public static boolean updateEmployee(int employeeId, Employee emp) {
             System.err.println("Error updating address: " + e.getMessage());
         }
     }
-    private static void updateDepartments(int employeeId, List<Department> departments) {
+private static void updateDepartments(int employeeId, List<Department> departments) {
         String deleteQuery = "DELETE FROM employee_departments WHERE employee_id = ?";
         String insertQuery = "INSERT INTO employee_departments (employee_id, department_id) VALUES (?, ?)";
 
@@ -325,14 +288,10 @@ public static boolean updateEmployee(int employeeId, Employee emp) {
             }
         } catch (SQLException e) {
             System.err.println("Error updating departments for employee " + employeeId + ": " + e.getMessage());
-            // Optional: Rethrow or handle the exception based on your requirements
             throw new RuntimeException("Error updating departments for employee " + employeeId, e);
         }
     }
-
-
-
-    public static boolean deleteEmployee(int employeeId) {
+public static boolean deleteEmployee(int employeeId) {
         String query = "DELETE FROM Employee WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -352,5 +311,4 @@ public static boolean updateEmployee(int employeeId, Employee emp) {
         }
         return false;
     }
-
 }
