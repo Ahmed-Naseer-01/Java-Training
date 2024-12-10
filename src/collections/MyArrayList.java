@@ -1,6 +1,7 @@
 package collections;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 
 // array list can store element dynamically
@@ -35,6 +36,12 @@ public class MyArrayList {
      .clear
      .size
       */
-
+// iterator
+        Iterator<Integer> iterator = list.iterator();
+        // this will check is there any next element or not in the list
+        while (iterator.hasNext()) {
+            // this next element printout the next value
+            System.out.println(iterator.next());
+        }
     }
 }
